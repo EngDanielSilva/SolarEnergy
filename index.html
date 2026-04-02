@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Processo Energia Solar</title>
+
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script defer src="viewer.js"></script>
+  <script defer src="script.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+<h1>⚡ Processo de Implantação de Energia Solar</h1>
+
+<section class="timeline">
+<ul>
+
+<li onclick="openPDF('pdfs/abordagem.pdf')">
+<i class="fa-solid fa-user"></i>
+<div class="box">
+<h3><span>01</span> Abordagem</h3>
+<p>Entendimento da necessidade do cliente.</p>
+</div>
+</li>
+
+<li onclick="openPDF('pdfs/levantamento.pdf')">
+<i class="fa-solid fa-file"></i>
+<div class="box">
+<h3><span>02</span> Levantamento</h3>
+<p>Coleta de dados técnicos.</p>
+</div>
+</li>
+
+<li onclick="openSimulator()">
+<i class="fa-solid fa-chart-line"></i>
+<div class="box">
+<h3><span>03</span> Proposta (Simulação)</h3>
+<p>Dimensionamento do sistema solar.</p>
+</div>
+</li>
+
+<li onclick="showFinancing()">
+<i class="fa-solid fa-handshake"></i>
+<div class="box">
+<h3><span>04</span> Fechamento</h3>
+<p>Formas de pagamento e financiamento.</p>
+</div>
+</li>
+
+<li onclick="showSuppliers()">
+<i class="fa-solid fa-box"></i>
+<div class="box">
+<h3><span>05</span> Pedido</h3>
+<p>Principais fornecedores e compra.</p>
+</div>
+</li>
+
+<li class="parallel">
+<i class="fa-solid fa-diagram-project"></i>
+<div class="box">
+<h3><span class="parallel-tag">PARALELO</span> Engenharia + Homologação</h3>
+<p>Projeto e aprovação na concessionária.</p>
+</div>
+</li>
+
+<li class="parallel">
+<i class="fa-solid fa-screwdriver-wrench"></i>
+<div class="box">
+<h3><span class="parallel-tag">PARALELO</span> Instalação</h3>
+<p>Execução da obra.</p>
+</div>
+</li>
+
+<li>
+<i class="fa-solid fa-building"></i>
+<div class="box">
+<h3><span>06</span> Vistoria</h3>
+<p>Inspeção da concessionária.</p>
+</div>
+</li>
+
+<li>
+<i class="fa-solid fa-bolt"></i>
+<div class="box">
+<h3><span>07</span> Operação</h3>
+<p>Sistema gerando energia.</p>
+</div>
+</li>
+
+</ul>
+</section>
+
+<!-- PDF VIEWER -->
+<!-- PDF VIEWER PROFISSIONAL -->
+<div id="pdfViewer" class="pdf-viewer">
+  <button class="close-btn" onclick="closePDF()">X</button>
+  <div id="pdfCanvasContainer"></div>
+</div>
+
+<!-- SIMULADOR -->
+<div id="simulator" class="side-panel">
+<button class="close-btn" onclick="closePanel()">X</button>
+<h2>Dimensionamento Solar</h2>
+
+<label>Consumo mensal (kWh)</label>
+<input type="number" id="consumo">
+
+<label>Irradiação média</label>
+<input type="number" id="irradiacao" value="5.5">
+
+<label>Potência do módulo (W)</label>
+<input type="number" id="potencia" value="600">
+
+<button onclick="calcular()">Calcular</button>
+
+<h3 id="resultado"></h3>
+</div>
+
+<!-- FINANCEIRO -->
+<div id="finance" class="side-panel">
+<button class="close-btn" onclick="closePanel()">X</button>
+<h2>Opções de Pagamento</h2>
+
+<p><b>Financiamento:</b></p>
+<ul>
+<li>Banco do Brasil</li>
+<li>Caixa Econômica</li>
+<li>Santander</li>
+<li>BV Financeira</li>
+</ul>
+
+<p><b>Outras formas:</b></p>
+<ul>
+<li>À vista (maior desconto)</li>
+<li>Entrada + saldo na instalação</li>
+</ul>
+
+<p style="color:orange;">
+⚠️ Entrada deve cobrir o kit + instalação
+</p>
+</div>
+
+<!-- FORNECEDORES -->
+<div id="suppliers" class="side-panel">
+<button class="close-btn" onclick="closePanel()">X</button>
+<h2>Fornecedores</h2>
+
+<ul>
+<li>Belenus</li>
+<li>Amara NZero</li>
+<li>Solar Distribuidora</li>
+<li>Fortlev Solar</li>
+</ul>
+
+<p>Trabalhamos com distribuidores homologados.</p>
+</div>
+
+</body>
+</html>
