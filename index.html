@@ -2,162 +2,1821 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Processo Energia Solar</title>
-
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <script defer src="viewer.js"></script>
-  <script defer src="script.js"></script>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚡ Processo Solar | Treinamento Integradores</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-</head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
 
+    :root {
+      --solar: #f59e0b;
+      --solar-dark: #b45309;
+      --sky: #38bdf8;
+      --sky-dark: #0284c7;
+      --bg: #060c1a;
+      --bg2: #0d1b2e;
+      --bg3: #112240;
+      --surface: #1a2f4a;
+      --surface2: #1e3a5f;
+      --text: #e2e8f0;
+      --text2: #94a3b8;
+      --parallel: #f59e0b;
+      --green: #22c55e;
+      --red: #ef4444;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* BACKGROUND TEXTURE */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 10%, rgba(56,189,248,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 80%, rgba(245,158,11,0.05) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* HEADER */
+    header {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 50px 20px 30px;
+      border-bottom: 1px solid rgba(56,189,248,0.15);
+    }
+
+    .header-badge {
+      display: inline-block;
+      background: rgba(245,158,11,0.12);
+      border: 1px solid rgba(245,158,11,0.3);
+      color: var(--solar);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 5px 16px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+
+    header h1 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 700;
+      letter-spacing: 1px;
+      line-height: 1.1;
+      background: linear-gradient(135deg, #fff 0%, var(--sky) 50%, var(--solar) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    header p {
+      color: var(--text2);
+      font-size: 14px;
+      margin-top: 10px;
+      font-weight: 300;
+      letter-spacing: 0.5px;
+    }
+
+    /* NAV TABS */
+    .nav-tabs {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      padding: 12px 20px;
+      background: rgba(6,12,26,0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(56,189,248,0.1);
+    }
+
+    .nav-tab {
+      background: transparent;
+      border: 1px solid rgba(56,189,248,0.2);
+      color: var(--text2);
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 8px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+    }
+
+    .nav-tab:hover {
+      background: rgba(56,189,248,0.08);
+      border-color: rgba(56,189,248,0.4);
+      color: var(--sky);
+    }
+
+    .nav-tab.active {
+      background: var(--sky);
+      border-color: var(--sky);
+      color: #000;
+      font-weight: 600;
+    }
+
+    /* SECTIONS */
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* ======================== TIMELINE ======================== */
+    .timeline-section {
+      padding: 60px 20px 100px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .timeline-container {
+      position: relative;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* Vertical line */
+    .timeline-container::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--sky), var(--solar));
+      transform: translateX(-50%);
+    }
+
+    .timeline-item {
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+      margin-bottom: 48px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .timeline-item:nth-child(even) {
+      justify-content: flex-start;
+    }
+
+    /* Icon dot on the line */
+    .timeline-dot {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--bg3);
+      border: 2px solid var(--sky);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--sky);
+      font-size: 16px;
+      z-index: 5;
+      transition: all 0.25s;
+      top: 12px;
+    }
+
+    .timeline-item:hover .timeline-dot {
+      background: var(--sky);
+      color: #000;
+      transform: translateX(-50%) scale(1.1);
+      box-shadow: 0 0 20px rgba(56,189,248,0.5);
+    }
+
+    .timeline-item.parallel .timeline-dot {
+      border-color: var(--parallel);
+      color: var(--parallel);
+    }
+
+    .timeline-item.parallel:hover .timeline-dot {
+      background: var(--parallel);
+      color: #000;
+      box-shadow: 0 0 20px rgba(245,158,11,0.5);
+    }
+
+    /* Card */
+    .timeline-card {
+      width: calc(50% - 52px);
+      background: var(--surface);
+      border: 1px solid rgba(56,189,248,0.15);
+      border-radius: 12px;
+      padding: 0;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      transform: translateX(30px);
+      opacity: 0;
+      animation: slideInRight 0.5s ease forwards;
+    }
+
+    .timeline-item:nth-child(even) .timeline-card {
+      transform: translateX(-30px);
+      animation-name: slideInLeft;
+      margin-left: 52px;
+    }
+
+    .timeline-item:nth-child(odd) .timeline-card {
+      margin-right: 52px;
+    }
+
+    @keyframes slideInRight {
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes slideInLeft {
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .timeline-card:hover {
+      border-color: rgba(56,189,248,0.5);
+      transform: translateY(-3px) !important;
+      box-shadow: 0 12px 40px rgba(56,189,248,0.15);
+    }
+
+    .timeline-item.parallel .timeline-card {
+      border-color: rgba(245,158,11,0.25);
+    }
+
+    .timeline-item.parallel .timeline-card:hover {
+      border-color: rgba(245,158,11,0.6);
+      box-shadow: 0 12px 40px rgba(245,158,11,0.15);
+    }
+
+    .card-header {
+      background: linear-gradient(135deg, var(--bg3), var(--surface2));
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid rgba(56,189,248,0.1);
+    }
+
+    .parallel .card-header {
+      border-bottom-color: rgba(245,158,11,0.2);
+    }
+
+    .step-badge {
+      background: var(--sky);
+      color: #000;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 4px;
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+
+    .parallel .step-badge {
+      background: var(--parallel);
+    }
+
+    .card-header h3 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.5px;
+    }
+
+    .card-body {
+      padding: 14px 18px;
+    }
+
+    .card-body p {
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.5;
+    }
+
+    .card-action {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--sky);
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+
+    .parallel .card-action {
+      color: var(--parallel);
+    }
+
+    /* Staggered animations */
+    .timeline-item:nth-child(1) .timeline-card { animation-delay: 0.05s; }
+    .timeline-item:nth-child(2) .timeline-card { animation-delay: 0.1s; }
+    .timeline-item:nth-child(3) .timeline-card { animation-delay: 0.15s; }
+    .timeline-item:nth-child(4) .timeline-card { animation-delay: 0.2s; }
+    .timeline-item:nth-child(5) .timeline-card { animation-delay: 0.25s; }
+    .timeline-item:nth-child(6) .timeline-card { animation-delay: 0.3s; }
+    .timeline-item:nth-child(7) .timeline-card { animation-delay: 0.35s; }
+    .timeline-item:nth-child(8) .timeline-card { animation-delay: 0.4s; }
+    .timeline-item:nth-child(9) .timeline-card { animation-delay: 0.45s; }
+
+    /* End cap */
+    .timeline-end {
+      text-align: center;
+      padding: 20px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .timeline-end-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--solar), var(--solar-dark));
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 0 30px rgba(245,158,11,0.5);
+    }
+
+    /* ======================== PDF VIEWER FULLSCREEN ======================== */
+    #pdfOverlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 9999;
+      flex-direction: column;
+    }
+
+    #pdfOverlay.active {
+      display: flex;
+    }
+
+    .pdf-toolbar {
+      background: rgba(6,12,26,0.95);
+      border-bottom: 1px solid rgba(56,189,248,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .pdf-toolbar-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--sky);
+      letter-spacing: 0.5px;
+    }
+
+    .pdf-toolbar-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pdf-nav-btn {
+      background: rgba(56,189,248,0.12);
+      border: 1px solid rgba(56,189,248,0.3);
+      color: var(--sky);
+      width: 34px;
+      height: 34px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .pdf-nav-btn:hover {
+      background: var(--sky);
+      color: #000;
+    }
+
+    .pdf-page-info {
+      font-size: 13px;
+      color: var(--text2);
+      padding: 0 8px;
+      white-space: nowrap;
+    }
+
+    .pdf-close-btn {
+      background: rgba(239,68,68,0.15);
+      border: 1px solid rgba(239,68,68,0.3);
+      color: #ef4444;
+      padding: 7px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pdf-close-btn:hover {
+      background: #ef4444;
+      color: white;
+    }
+
+    #pdfScrollArea {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px;
+      gap: 16px;
+      background: #111;
+    }
+
+    #pdfScrollArea canvas {
+      max-width: 100%;
+      border-radius: 4px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.8);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .pdf-loading {
+      color: var(--sky);
+      font-size: 14px;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .pdf-loading i { font-size: 28px; display: block; margin-bottom: 12px; animation: spin 1s linear infinite; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ======================== SIDE PANELS ======================== */
+    .side-panel {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: min(520px, 100%);
+      height: 100%;
+      background: var(--bg2);
+      border-left: 1px solid rgba(56,189,248,0.15);
+      padding: 0;
+      z-index: 1000;
+      transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .side-panel.active { right: 0; }
+
+    .panel-header {
+      background: var(--bg3);
+      padding: 20px 24px;
+      border-bottom: 1px solid rgba(56,189,248,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .panel-header h2 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--sky);
+      letter-spacing: 0.5px;
+    }
+
+    .panel-close {
+      background: rgba(239,68,68,0.15);
+      border: 1px solid rgba(239,68,68,0.25);
+      color: #ef4444;
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .panel-close:hover { background: #ef4444; color: white; }
+
+    .panel-body {
+      padding: 24px;
+      flex: 1;
+    }
+
+    .panel-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(3px);
+      z-index: 999;
+    }
+
+    .panel-overlay.active { display: block; }
+
+    /* Info cards inside panels */
+    .info-card {
+      background: var(--surface);
+      border: 1px solid rgba(56,189,248,0.1);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .info-card h4 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--sky);
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .info-card ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .info-card ul li {
+      font-size: 13px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .info-card ul li::before {
+      content: '▸';
+      color: var(--sky);
+      font-size: 10px;
+    }
+
+    .warning-box {
+      background: rgba(245,158,11,0.08);
+      border: 1px solid rgba(245,158,11,0.25);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--solar);
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      margin-top: 14px;
+    }
+
+    /* Simulator */
+    .sim-group {
+      margin-bottom: 16px;
+    }
+
+    .sim-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text2);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 6px;
+    }
+
+    .sim-group input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid rgba(56,189,248,0.2);
+      border-radius: 8px;
+      color: white;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.2s;
+    }
+
+    .sim-group input:focus {
+      outline: none;
+      border-color: var(--sky);
+    }
+
+    .sim-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--sky-dark), var(--sky));
+      border: none;
+      color: #000;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: opacity 0.2s;
+    }
+
+    .sim-btn:hover { opacity: 0.85; }
+
+    .sim-result {
+      background: rgba(56,189,248,0.08);
+      border: 1px solid rgba(56,189,248,0.25);
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: 16px;
+      text-align: center;
+      display: none;
+    }
+
+    .sim-result.show { display: block; }
+
+    .sim-result .result-num {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--sky);
+      line-height: 1;
+    }
+
+    .sim-result .result-label {
+      font-size: 12px;
+      color: var(--text2);
+      margin-top: 4px;
+    }
+
+    .sim-result .result-kw {
+      font-size: 14px;
+      color: var(--solar);
+      margin-top: 8px;
+      font-weight: 500;
+    }
+
+    /* ======================== QUICK LINKS SECTION ======================== */
+    .extra-section {
+      padding: 60px 20px 80px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: var(--text2);
+      font-size: 14px;
+      margin-bottom: 40px;
+    }
+
+    .divider {
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(to right, var(--sky), var(--solar));
+      margin: 12px auto 40px;
+      border-radius: 2px;
+    }
+
+    /* Quick Links Grid */
+    .quick-links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .quick-link-card {
+      background: var(--surface);
+      border: 1px solid rgba(56,189,248,0.12);
+      border-radius: 14px;
+      padding: 24px 20px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quick-link-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(56,189,248,0.05), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .quick-link-card:hover::before { opacity: 1; }
+
+    .quick-link-card:hover {
+      border-color: rgba(56,189,248,0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+    }
+
+    .quick-link-card.yellow {
+      border-color: rgba(245,158,11,0.15);
+    }
+
+    .quick-link-card.yellow::before {
+      background: linear-gradient(135deg, rgba(245,158,11,0.05), transparent);
+    }
+
+    .quick-link-card.yellow:hover {
+      border-color: rgba(245,158,11,0.45);
+      box-shadow: 0 16px 40px rgba(245,158,11,0.1);
+    }
+
+    .quick-link-card.green {
+      border-color: rgba(34,197,94,0.15);
+    }
+
+    .quick-link-card.green:hover {
+      border-color: rgba(34,197,94,0.45);
+      box-shadow: 0 16px 40px rgba(34,197,94,0.1);
+    }
+
+    .ql-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .ql-icon.blue { background: rgba(56,189,248,0.12); color: var(--sky); }
+    .ql-icon.yellow { background: rgba(245,158,11,0.12); color: var(--solar); }
+    .ql-icon.green { background: rgba(34,197,94,0.12); color: var(--green); }
+    .ql-icon.red { background: rgba(239,68,68,0.12); color: var(--red); }
+    .ql-icon.purple { background: rgba(168,85,247,0.12); color: #a855f7; }
+
+    .ql-label {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.3px;
+    }
+
+    .ql-desc {
+      font-size: 12px;
+      color: var(--text2);
+      line-height: 1.4;
+    }
+
+    .ql-arrow {
+      margin-top: auto;
+      font-size: 11px;
+      color: var(--sky);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .quick-link-card.yellow .ql-arrow { color: var(--solar); }
+    .quick-link-card.green .ql-arrow { color: var(--green); }
+
+    /* ======================== PRICING SECTION ======================== */
+    .pricing-section {
+      padding: 60px 20px 80px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .pricing-intro {
+      background: var(--surface);
+      border: 1px solid rgba(245,158,11,0.2);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 32px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .pricing-intro i { color: var(--solar); font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+
+    .pricing-intro h3 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--solar);
+    }
+
+    .pricing-intro p {
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+
+    .kit-table-wrapper {
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 1px solid rgba(56,189,248,0.12);
+      margin-bottom: 28px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      min-width: 600px;
+    }
+
+    thead tr {
+      background: var(--bg3);
+    }
+
+    thead th {
+      padding: 14px 16px;
+      text-align: left;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--sky);
+      border-bottom: 1px solid rgba(56,189,248,0.15);
+    }
+
+    tbody tr {
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      transition: background 0.2s;
+    }
+
+    tbody tr:hover { background: rgba(56,189,248,0.04); }
+
+    tbody td {
+      padding: 12px 16px;
+      color: var(--text);
+    }
+
+    tbody td:first-child { font-weight: 600; color: white; }
+
+    .badge-power {
+      background: rgba(34,197,94,0.12);
+      border: 1px solid rgba(34,197,94,0.25);
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+
+    .pricing-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid rgba(56,189,248,0.25);
+      color: var(--sky);
+      text-decoration: none;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .action-btn:hover {
+      background: var(--sky);
+      color: #000;
+    }
+
+    .action-btn.yellow {
+      border-color: rgba(245,158,11,0.3);
+      color: var(--solar);
+    }
+
+    .action-btn.yellow:hover {
+      background: var(--solar);
+      color: #000;
+    }
+
+    /* ======================== FOOTER ======================== */
+    footer {
+      background: var(--bg2);
+      border-top: 1px solid rgba(56,189,248,0.1);
+      padding: 24px 20px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text2);
+      position: relative;
+      z-index: 1;
+    }
+
+    footer a { color: var(--sky); text-decoration: none; }
+
+    /* ======================== RESPONSIVE ======================== */
+    @media (max-width: 768px) {
+      .timeline-container::before { left: 24px; }
+      
+      .timeline-item,
+      .timeline-item:nth-child(even) {
+        justify-content: flex-start;
+      }
+
+      .timeline-dot {
+        left: 24px;
+        top: 10px;
+        width: 38px;
+        height: 38px;
+        font-size: 13px;
+      }
+
+      .timeline-card,
+      .timeline-item:nth-child(even) .timeline-card {
+        width: calc(100% - 76px);
+        margin-left: 76px !important;
+        margin-right: 0 !important;
+      }
+
+      .nav-tabs { flex-wrap: wrap; justify-content: center; }
+
+      .quick-links-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .quick-links-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
 <body>
 
-<h1>⚡ Processo de Implantação de Energia Solar</h1>
+<header>
+  <div class="header-badge">🔆 Treinamento de Integradores</div>
+  <h1>⚡ Processo de Implantação de Energia Solar</h1>
+  <p>Guia completo do ciclo de vendas e instalação · Eng. Daniel Silva</p>
+</header>
 
-<section class="timeline">
-<ul>
+<nav class="nav-tabs">
+  <button class="nav-tab active" onclick="showSection('timeline')"><i class="fa-solid fa-list-ol" style="margin-right:6px"></i>Processo</button>
+  <button class="nav-tab" onclick="showSection('quicklinks')"><i class="fa-solid fa-link" style="margin-right:6px"></i>Links Rápidos</button>
+  <button class="nav-tab" onclick="showSection('pricing')"><i class="fa-solid fa-tags" style="margin-right:6px"></i>Precificação de Kits</button>
+</nav>
 
-<li onclick="openPDF('abordagem.pdf')">
-<i class="fa-solid fa-user"></i>
-<div class="box">
-<h3><span>01</span> Abordagem</h3>
-<p>Entendimento da necessidade do cliente.</p>
+<!-- ======================== TIMELINE ======================== -->
+<div id="section-timeline" class="section active">
+<div class="timeline-section">
+  <div class="timeline-container">
+
+    <!-- 01 Abordagem -->
+    <div class="timeline-item" onclick="openPDF('abordagem.pdf', 'Abordagem — Entendimento do Cliente')">
+      <div class="timeline-dot"><i class="fa-solid fa-user"></i></div>
+      <div class="timeline-card">
+        <div class="card-header">
+          <span class="step-badge">01</span>
+          <h3>Abordagem</h3>
+        </div>
+        <div class="card-body">
+          <p>Entendimento da necessidade do cliente. Qualificação e primeiro contato técnico-comercial.</p>
+          <div class="card-action"><i class="fa-solid fa-file-pdf"></i> Abrir apresentação</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02 Levantamento -->
+    <div class="timeline-item" onclick="openPDF('levantamento.pdf', 'Levantamento — Coleta de Dados Técnicos')">
+      <div class="timeline-dot"><i class="fa-solid fa-clipboard-list"></i></div>
+      <div class="timeline-card">
+        <div class="card-header">
+          <span class="step-badge">02</span>
+          <h3>Levantamento</h3>
+        </div>
+        <div class="card-body">
+          <p>Coleta de dados técnicos: conta de energia, estrutura do telhado, padrão de entrada.</p>
+          <div class="card-action"><i class="fa-solid fa-file-pdf"></i> Abrir apresentação</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 Proposta -->
+    <div class="timeline-item" onclick="window.open('https://engdanielsilva.github.io/solarcalc/','_blank')">
+      <div class="timeline-dot"><i class="fa-solid fa-calculator"></i></div>
+      <div class="timeline-card">
+        <div class="card-header">
+          <span class="step-badge">03</span>
+          <h3>Proposta (Simulação)</h3>
+        </div>
+        <div class="card-body">
+          <p>Dimensionamento do sistema solar avançado. Cálculo de módulos, inversores e geração estimada.</p>
+          <div class="card-action"><i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir calculadora solar</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 Fechamento -->
+    <div class="timeline-item" onclick="openPanel('finance')">
+      <div class="timeline-dot"><i class="fa-solid fa-handshake"></i></div>
+      <div class="timeline-card">
+        <div class="card-header">
+          <span class="step-badge">04</span>
+          <h3>Fechamento</h3>
+        </div>
+        <div class="card-body">
+          <p>Formas de pagamento, financiamento bancário e condições comerciais para o cliente.</p>
+          <div class="card-action"><i class="fa-solid fa-building-columns"></i> Ver opções de pagamento</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 05 Pedido -->
+    <div class="timeline-item" onclick="openPanel('suppliers')">
+      <div class="timeline-dot"><i class="fa-solid fa-box"></i></div>
+      <div class="timeline-card">
+        <div class="card-header">
+          <span class="step-badge">05</span>
+          <h3>Pedido</h3>
+        </div>
+        <div class="card-body">
+          <p>Principais fornecedores, compra de equipamentos e logística de entrega do kit.</p>
+          <div class="card-action"><i class="fa-solid fa-truck"></i> Ver fornecedores</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PARALELO Engenharia -->
+    <div class="timeline-item parallel" onclick="openPanel('engineering')">
+      <div class="timeline-dot"><i class="fa-solid fa-diagram-project"></i></div>
+      <div class="timeline-card">
+        <div class="card-header">
+          <span class="step-badge">PARALELO</span>
+          <h3>Engenharia + Homologação</h3>
+        </div>
+        <div class="card-body">
+          <p>Projeto elétrico e aprovação na concessionária. Documentação técnica e parecer de acesso.</p>
+          <div class="card-action"><i class="fa-solid fa-file-contract"></i> Ver etapas do projeto</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PARALELO Instalação -->
+    <div class="timeline-item parallel" onclick="openPanel('installation')">
+      <div class="timeline-dot"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+      <div class="timeline-card">
+        <div class="card-header">
+          <span class="step-badge">PARALELO</span>
+          <h3>Instalação</h3>
+        </div>
+        <div class="card-body">
+          <p>Execução da obra: fixação das estruturas, cabeamento, instalação do inversor e módulos.</p>
+          <div class="card-action"><i class="fa-solid fa-solar-panel"></i> Ver checklist de instalação</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 06 Vistoria -->
+    <div class="timeline-item" onclick="openPanel('inspection')">
+      <div class="timeline-dot"><i class="fa-solid fa-building-circle-check"></i></div>
+      <div class="timeline-card">
+        <div class="card-header">
+          <span class="step-badge">06</span>
+          <h3>Vistoria</h3>
+        </div>
+        <div class="card-body">
+          <p>Inspeção da concessionária. Verificação técnica do sistema antes da ativação.</p>
+          <div class="card-action"><i class="fa-solid fa-circle-check"></i> Ver requisitos de vistoria</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 07 Operação -->
+    <div class="timeline-item" onclick="openPanel('operation')">
+      <div class="timeline-dot"><i class="fa-solid fa-bolt"></i></div>
+      <div class="timeline-card">
+        <div class="card-header">
+          <span class="step-badge">07</span>
+          <h3>Operação</h3>
+        </div>
+        <div class="card-body">
+          <p>Sistema ativo gerando energia. Monitoramento, manutenção preventiva e pós-venda.</p>
+          <div class="card-action"><i class="fa-solid fa-chart-area"></i> Ver operação e monitoramento</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-end">
+      <div class="timeline-end-icon">☀️</div>
+    </div>
+
+  </div>
 </div>
-</li>
-
-<li onclick="openPDF('levantamento.pdf')">
-<i class="fa-solid fa-file"></i>
-<div class="box">
-<h3><span>02</span> Levantamento</h3>
-<p>Coleta de dados técnicos.</p>
-</div>
-</li>
-
-<!-- ITEM 03 ALTERADO - AGORA REDIRECIONA PARA SUA CALCULADORA -->
-<li onclick="window.open('https://engdanielsilva.github.io/solarcalc/', '_blank')">
-<i class="fa-solid fa-chart-line"></i>
-<div class="box">
-<h3><span>03</span> Proposta (Simulação)</h3>
-<p>Dimensionamento do sistema solar avançado.</p>
-</div>
-</li>
-
-<li onclick="showFinancing()">
-<i class="fa-solid fa-handshake"></i>
-<div class="box">
-<h3><span>04</span> Fechamento</h3>
-<p>Formas de pagamento e financiamento.</p>
-</div>
-</li>
-
-<li onclick="showSuppliers()">
-<i class="fa-solid fa-box"></i>
-<div class="box">
-<h3><span>05</span> Pedido</h3>
-<p>Principais fornecedores e compra.</p>
-</div>
-</li>
-
-<li class="parallel">
-<i class="fa-solid fa-diagram-project"></i>
-<div class="box">
-<h3><span class="parallel-tag">PARALELO</span> Engenharia + Homologação</h3>
-<p>Projeto e aprovação na concessionária.</p>
-</div>
-</li>
-
-<li class="parallel">
-<i class="fa-solid fa-screwdriver-wrench"></i>
-<div class="box">
-<h3><span class="parallel-tag">PARALELO</span> Instalação</h3>
-<p>Execução da obra.</p>
-</div>
-</li>
-
-<li>
-<i class="fa-solid fa-building"></i>
-<div class="box">
-<h3><span>06</span> Vistoria</h3>
-<p>Inspeção da concessionária.</p>
-</div>
-</li>
-
-<li>
-<i class="fa-solid fa-bolt"></i>
-<div class="box">
-<h3><span>07</span> Operação</h3>
-<p>Sistema gerando energia.</p>
-</div>
-</li>
-
-</ul>
-</section>
-
-<!-- PDF VIEWER -->
-<div id="pdfViewer" class="pdf-viewer">
-  <button class="close-btn" onclick="closePDF()">X</button>
-  <div id="pdfCanvasContainer"></div>
 </div>
 
-<!-- SIMULADOR -->
-<div id="simulator" class="side-panel">
-<button class="close-btn" onclick="closePanel()">X</button>
-<h2>Dimensionamento Solar</h2>
+<!-- ======================== QUICK LINKS ======================== -->
+<div id="section-quicklinks" class="section">
+<div class="extra-section">
+  <div class="section-title">🔗 Links Rápidos</div>
+  <p class="section-subtitle">Ferramentas e recursos utilizados no processo de venda e instalação</p>
+  <div class="divider"></div>
 
-<label>Consumo mensal (kWh)</label>
-<input type="number" id="consumo">
+  <div class="quick-links-grid">
 
-<label>Irradiação média</label>
-<input type="number" id="irradiacao" value="5.5">
+    <a class="quick-link-card" href="https://engdanielsilva.github.io/solarcalc/" target="_blank">
+      <div class="ql-icon blue"><i class="fa-solid fa-solar-panel"></i></div>
+      <div class="ql-label">Calculadora Solar</div>
+      <div class="ql-desc">Dimensionamento rápido de sistemas fotovoltaicos — módulos, inversores e geração estimada.</div>
+      <div class="ql-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir ferramenta</div>
+    </a>
 
-<label>Potência do módulo (W)</label>
-<input type="number" id="potencia" value="600">
+    <div class="quick-link-card yellow" onclick="showSection('pricing'); document.querySelector('[onclick*=pricing]').classList.add('active')">
+      <div class="ql-icon yellow"><i class="fa-solid fa-tags"></i></div>
+      <div class="ql-label">Precificação de Kits</div>
+      <div class="ql-desc">Tabela de referência de kits solares por potência com margens e sugestão de preço final.</div>
+      <div class="ql-arrow" style="color:var(--solar)"><i class="fa-solid fa-arrow-right"></i> Ver precificação</div>
+    </div>
 
-<button onclick="calcular()">Calcular</button>
+    <div class="quick-link-card green" onclick="openPanel('finance')">
+      <div class="ql-icon green"><i class="fa-solid fa-building-columns"></i></div>
+      <div class="ql-label">Opções de Financiamento</div>
+      <div class="ql-desc">Linhas de crédito disponíveis: Banco do Brasil, Caixa, Santander, BV e outros.</div>
+      <div class="ql-arrow" style="color:var(--green)"><i class="fa-solid fa-arrow-right"></i> Ver opções</div>
+    </div>
 
-<h3 id="resultado"></h3>
+    <div class="quick-link-card" onclick="openPanel('suppliers')">
+      <div class="ql-icon blue"><i class="fa-solid fa-truck"></i></div>
+      <div class="ql-label">Fornecedores</div>
+      <div class="ql-desc">Distribuidores homologados parceiros: Belenus, Amara NZero, Fortlev Solar e mais.</div>
+      <div class="ql-arrow"><i class="fa-solid fa-arrow-right"></i> Ver lista</div>
+    </div>
+
+    <a class="quick-link-card yellow" href="#" onclick="alert('Insira aqui o link da sua planilha de precificação')">
+      <div class="ql-icon yellow"><i class="fa-solid fa-file-excel"></i></div>
+      <div class="ql-label">Planilha de Precificação</div>
+      <div class="ql-desc">Planilha completa com cálculo automático de margens, impostos e preço de venda.</div>
+      <div class="ql-arrow" style="color:var(--solar)"><i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir planilha</div>
+    </a>
+
+    <div class="quick-link-card" onclick="openSimulator()">
+      <div class="ql-icon blue"><i class="fa-solid fa-calculator"></i></div>
+      <div class="ql-label">Simulador Rápido</div>
+      <div class="ql-desc">Estimativa de módulos necessários pelo consumo mensal do cliente em kWh.</div>
+      <div class="ql-arrow"><i class="fa-solid fa-arrow-right"></i> Calcular agora</div>
+    </div>
+
+    <a class="quick-link-card green" href="https://www.aneel.gov.br/geracao-distribuida" target="_blank">
+      <div class="ql-icon green"><i class="fa-solid fa-scale-balanced"></i></div>
+      <div class="ql-label">Regulamentação ANEEL</div>
+      <div class="ql-desc">Legislação vigente, resolução normativa e marco legal da microgeração distribuída.</div>
+      <div class="ql-arrow" style="color:var(--green)"><i class="fa-solid fa-arrow-up-right-from-square"></i> Acessar ANEEL</div>
+    </a>
+
+    <div class="quick-link-card" onclick="openPanel('engineering')">
+      <div class="ql-icon blue"><i class="fa-solid fa-file-contract"></i></div>
+      <div class="ql-label">Checklist de Homologação</div>
+      <div class="ql-desc">Documentos e etapas para aprovação do projeto junto à concessionária.</div>
+      <div class="ql-arrow"><i class="fa-solid fa-arrow-right"></i> Ver checklist</div>
+    </div>
+
+  </div>
+</div>
 </div>
 
-<!-- FINANCEIRO -->
-<div id="finance" class="side-panel">
-<button class="close-btn" onclick="closePanel()">X</button>
-<h2>Opções de Pagamento</h2>
+<!-- ======================== PRICING ======================== -->
+<div id="section-pricing" class="section">
+<div class="pricing-section">
+  <div class="section-title">💰 Precificação de Kits Solares</div>
+  <p class="section-subtitle">Referências de custo e sugestão de preço de venda por faixa de potência</p>
+  <div class="divider"></div>
 
-<p><b>Financiamento:</b></p>
-<ul>
-<li>Banco do Brasil</li>
-<li>Caixa Econômica</li>
-<li>Santander</li>
-<li>BV Financeira</li>
-</ul>
+  <div class="pricing-intro">
+    <i class="fa-solid fa-circle-info"></i>
+    <div>
+      <h3>Como usar esta tabela</h3>
+      <p>Os preços de kit são valores de <strong style="color:white">referência de mercado</strong> e variam conforme fornecedor, localidade e volume de compra. A margem sugerida de 25–35% deve ser ajustada considerando o custo de instalação, mão de obra e overhead da empresa. Para precificação detalhada, utilize a planilha completa abaixo.</p>
+    </div>
+  </div>
 
-<p><b>Outras formas:</b></p>
-<ul>
-<li>À vista (maior desconto)</li>
-<li>Entrada + saldo na instalação</li>
-</ul>
+  <div class="kit-table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Potência do Kit</th>
+          <th>Perfil de Consumo</th>
+          <th>Módulos (600W)</th>
+          <th>Custo Kit (ref.)</th>
+          <th>Margem 30%</th>
+          <th>Preço Final Sugerido</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge-power">2,4 kWp</span></td>
+          <td>até 250 kWh/mês</td>
+          <td>4 módulos</td>
+          <td>R$ 6.500</td>
+          <td>+R$ 1.950</td>
+          <td><strong style="color:var(--solar)">R$ 12.000–15.000</strong></td>
+        </tr>
+        <tr>
+          <td><span class="badge-power">3,6 kWp</span></td>
+          <td>até 380 kWh/mês</td>
+          <td>6 módulos</td>
+          <td>R$ 9.200</td>
+          <td>+R$ 2.760</td>
+          <td><strong style="color:var(--solar)">R$ 17.000–20.000</strong></td>
+        </tr>
+        <tr>
+          <td><span class="badge-power">4,8 kWp</span></td>
+          <td>até 500 kWh/mês</td>
+          <td>8 módulos</td>
+          <td>R$ 11.800</td>
+          <td>+R$ 3.540</td>
+          <td><strong style="color:var(--solar)">R$ 20.000–25.000</strong></td>
+        </tr>
+        <tr>
+          <td><span class="badge-power">6,0 kWp</span></td>
+          <td>até 620 kWh/mês</td>
+          <td>10 módulos</td>
+          <td>R$ 14.500</td>
+          <td>+R$ 4.350</td>
+          <td><strong style="color:var(--solar)">R$ 24.000–30.000</strong></td>
+        </tr>
+        <tr>
+          <td><span class="badge-power">7,2 kWp</span></td>
+          <td>até 750 kWh/mês</td>
+          <td>12 módulos</td>
+          <td>R$ 17.000</td>
+          <td>+R$ 5.100</td>
+          <td><strong style="color:var(--solar)">R$ 28.000–35.000</strong></td>
+        </tr>
+        <tr>
+          <td><span class="badge-power">10,0 kWp</span></td>
+          <td>até 1.050 kWh/mês</td>
+          <td>17 módulos</td>
+          <td>R$ 22.000</td>
+          <td>+R$ 6.600</td>
+          <td><strong style="color:var(--solar)">R$ 36.000–45.000</strong></td>
+        </tr>
+        <tr>
+          <td><span class="badge-power">15,0 kWp</span></td>
+          <td>até 1.550 kWh/mês</td>
+          <td>25 módulos</td>
+          <td>R$ 30.000</td>
+          <td>+R$ 9.000</td>
+          <td><strong style="color:var(--solar)">R$ 50.000–62.000</strong></td>
+        </tr>
+        <tr>
+          <td><span class="badge-power">20,0 kWp</span></td>
+          <td>até 2.100 kWh/mês</td>
+          <td>34 módulos</td>
+          <td>R$ 39.000</td>
+          <td>+R$ 11.700</td>
+          <td><strong style="color:var(--solar)">R$ 65.000–80.000</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-<p style="color:orange;">
-⚠️ Entrada deve cobrir o kit + instalação
-</p>
+  <div class="warning-box" style="margin-bottom:28px">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    <div>Os preços acima são <strong>referências de mercado para 2025</strong> e não incluem: mão de obra de instalação, estrutura de fixação diferenciada, sistema de monitoramento, adequação do padrão de entrada nem frete. Consulte seus fornecedores para cotações atualizadas.</div>
+  </div>
+
+  <div class="pricing-actions">
+    <a class="action-btn yellow" href="#" onclick="alert('Substitua este link pelo link da sua planilha de precificação')">
+      <i class="fa-solid fa-file-excel"></i> Abrir Planilha Completa de Precificação
+    </a>
+    <button class="action-btn" onclick="openSimulator()">
+      <i class="fa-solid fa-calculator"></i> Simulador Rápido de Módulos
+    </button>
+    <a class="action-btn" href="https://engdanielsilva.github.io/solarcalc/" target="_blank">
+      <i class="fa-solid fa-solar-panel"></i> Calculadora Solar Avançada
+    </a>
+  </div>
+</div>
 </div>
 
-<!-- FORNECEDORES -->
-<div id="suppliers" class="side-panel">
-<button class="close-btn" onclick="closePanel()">X</button>
-<h2>Fornecedores</h2>
-
-<ul>
-<li>Belenus</li>
-<li>Amara NZero</li>
-<li>Solar Distribuidora</li>
-<li>Fortlev Solar</li>
-</ul>
-
-<p>Trabalhamos com distribuidores homologados.</p>
+<!-- ======================== PDF OVERLAY (FULLSCREEN) ======================== -->
+<div id="pdfOverlay">
+  <div class="pdf-toolbar">
+    <div class="pdf-toolbar-title" id="pdfTitle">Apresentação</div>
+    <div class="pdf-toolbar-controls">
+      <button class="pdf-nav-btn" onclick="prevPage()" title="Página anterior"><i class="fa-solid fa-chevron-left"></i></button>
+      <span class="pdf-page-info" id="pdfPageInfo">— / —</span>
+      <button class="pdf-nav-btn" onclick="nextPage()" title="Próxima página"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+    <button class="pdf-close-btn" onclick="closePDF()"><i class="fa-solid fa-xmark"></i> Fechar</button>
+  </div>
+  <div id="pdfScrollArea">
+    <div class="pdf-loading" id="pdfLoading">
+      <i class="fa-solid fa-spinner"></i>
+      Carregando apresentação...
+    </div>
+  </div>
 </div>
 
+<!-- PANEL OVERLAY -->
+<div class="panel-overlay" id="panelOverlay" onclick="closeAllPanels()"></div>
+
+<!-- ======================== SIDE PANELS ======================== -->
+
+<!-- Finance -->
+<div class="side-panel" id="finance">
+  <div class="panel-header">
+    <h2><i class="fa-solid fa-building-columns" style="margin-right:8px;opacity:0.7"></i>Opções de Pagamento</h2>
+    <button class="panel-close" onclick="closeAllPanels()"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="panel-body">
+    <div class="info-card">
+      <h4>Financiamento Bancário</h4>
+      <ul>
+        <li>Banco do Brasil — CDC Solar (taxas a partir de 0,99%/mês)</li>
+        <li>Caixa Econômica — Financiamento habitacional + solar</li>
+        <li>Santander — Crédito Solar com carência de 90 dias</li>
+        <li>BV Financeira — Especializada em energia solar</li>
+        <li>Sicredi / Sicoob — Cooperativas com boas taxas regionais</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h4>Outras Formas de Pagamento</h4>
+      <ul>
+        <li>À vista — maior poder de negociação e desconto</li>
+        <li>Entrada + saldo na entrega do kit</li>
+        <li>Entrada + saldo na vistoria aprovada</li>
+        <li>Parcelado no cartão de crédito (verificar limite)</li>
+        <li>BNDES via agente financeiro credenciado</li>
+      </ul>
+    </div>
+    <div class="warning-box">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <span>⚠️ A entrada do cliente deve cobrir ao menos o custo do kit + instalação para proteger o fluxo de caixa do integrador.</span>
+    </div>
+    <div class="info-card" style="margin-top:14px">
+      <h4>Dicas de Fechamento</h4>
+      <ul>
+        <li>Mostre o payback (retorno em 4–7 anos)</li>
+        <li>Compare a parcela do financiamento com a conta de luz</li>
+        <li>Apresente a valorização imobiliária do imóvel</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Suppliers -->
+<div class="side-panel" id="suppliers">
+  <div class="panel-header">
+    <h2><i class="fa-solid fa-truck" style="margin-right:8px;opacity:0.7"></i>Fornecedores</h2>
+    <button class="panel-close" onclick="closeAllPanels()"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="panel-body">
+    <div class="info-card">
+      <h4>Distribuidores Parceiros</h4>
+      <ul>
+        <li>Belenus — Forte no Nordeste, boa variedade de kits</li>
+        <li>Amara NZero — Soluções completas, suporte técnico</li>
+        <li>Solar Distribuidora — Preços competitivos, pronta entrega</li>
+        <li>Fortlev Solar — Estruturas e inversores, qualidade nacional</li>
+        <li>EDP Solar / Aldo Solar — Grandes distribuidores nacionais</li>
+        <li>Renovigi — Distribuidora com foco em qualidade</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h4>Critérios de Escolha</h4>
+      <ul>
+        <li>Prazo de entrega e disponibilidade em estoque</li>
+        <li>Condições de pagamento para o integrador</li>
+        <li>Garantia dos equipamentos (módulos: 25–30 anos)</li>
+        <li>Suporte técnico pós-venda</li>
+        <li>Homologação dos inversores na ANEEL</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h4>Principais Marcas de Equipamentos</h4>
+      <ul>
+        <li>Módulos: Canadian Solar, Jinko, BYD, Risen</li>
+        <li>Inversores: Growatt, Solis, WEG, Fronius, Deye</li>
+        <li>Estruturas: Romagnole, K2 Systems, Schletter</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Engineering -->
+<div class="side-panel" id="engineering">
+  <div class="panel-header">
+    <h2><i class="fa-solid fa-diagram-project" style="margin-right:8px;opacity:0.7"></i>Engenharia + Homologação</h2>
+    <button class="panel-close" onclick="closeAllPanels()"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="panel-body">
+    <div class="info-card">
+      <h4>Projeto Elétrico (ART)</h4>
+      <ul>
+        <li>Memorial descritivo do sistema</li>
+        <li>Diagrama unifilar com proteções</li>
+        <li>Cálculo de aterramento e SPDA</li>
+        <li>ART do engenheiro responsável (CREA)</li>
+        <li>Laudo de adequação do padrão de entrada</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h4>Documentação para Concessionária</h4>
+      <ul>
+        <li>Formulário de acesso de microgeração</li>
+        <li>Projeto elétrico assinado pelo engenheiro</li>
+        <li>Datasheet dos equipamentos homologados</li>
+        <li>Fotos do local de instalação</li>
+        <li>Documento de posse do imóvel</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h4>Etapas do Processo na Concessionária</h4>
+      <ul>
+        <li>1. Solicitação de acesso (protocolo)</li>
+        <li>2. Análise do projeto pela distribuidora</li>
+        <li>3. Parecer de acesso (favorável ou com pendências)</li>
+        <li>4. Instalação após parecer aprovado</li>
+        <li>5. Vistoria e troca de medidor bidirecional</li>
+      </ul>
+    </div>
+    <div class="warning-box">
+      <i class="fa-solid fa-clock"></i>
+      <span>O prazo médio de homologação é de <strong>30 a 90 dias</strong> — varia bastante por concessionária.</span>
+    </div>
+  </div>
+</div>
+
+<!-- Installation -->
+<div class="side-panel" id="installation">
+  <div class="panel-header">
+    <h2><i class="fa-solid fa-screwdriver-wrench" style="margin-right:8px;opacity:0.7"></i>Instalação</h2>
+    <button class="panel-close" onclick="closeAllPanels()"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="panel-body">
+    <div class="info-card">
+      <h4>Checklist de Pré-Instalação</h4>
+      <ul>
+        <li>Conferir equipamentos na entrega (nota fiscal)</li>
+        <li>Verificar condições do telhado (telhas, estrutura)</li>
+        <li>Confirmar padrão de entrada com o projeto</li>
+        <li>EPI completo para a equipe (capacete, cinto, luva)</li>
+        <li>Ferramentas e equipamentos calibrados</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h4>Sequência de Instalação</h4>
+      <ul>
+        <li>1. Fixação da estrutura metálica no telhado</li>
+        <li>2. Instalação dos módulos fotovoltaicos</li>
+        <li>3. Cabeamento DC (módulos → inversor)</li>
+        <li>4. Instalação do inversor e caixa de proteção</li>
+        <li>5. Cabeamento AC (inversor → quadro)</li>
+        <li>6. Aterramento e DPS</li>
+        <li>7. Comissionamento e testes</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h4>Após a Instalação</h4>
+      <ul>
+        <li>Fotos de todos os componentes instalados</li>
+        <li>Relatório de comissionamento</li>
+        <li>Configuração do monitoramento remoto</li>
+        <li>Orientação ao cliente sobre o sistema</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Inspection -->
+<div class="side-panel" id="inspection">
+  <div class="panel-header">
+    <h2><i class="fa-solid fa-building-circle-check" style="margin-right:8px;opacity:0.7"></i>Vistoria</h2>
+    <button class="panel-close" onclick="closeAllPanels()"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="panel-body">
+    <div class="info-card">
+      <h4>O Que o Vistoriador Avalia</h4>
+      <ul>
+        <li>Conformidade com o projeto aprovado</li>
+        <li>Identificação dos equipamentos (plaquetas)</li>
+        <li>Condições do padrão de entrada</li>
+        <li>Sistema de proteção (DPS, disjuntores)</li>
+        <li>Aterramento do sistema</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h4>Possíveis Pendências</h4>
+      <ul>
+        <li>Módulos instalados diferentes do projeto</li>
+        <li>Ausência de plaquetas de identificação</li>
+        <li>Padrão de entrada inadequado</li>
+        <li>Problemas no aterramento</li>
+        <li>Documentação incompleta</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h4>Após Aprovação</h4>
+      <ul>
+        <li>Troca do medidor por bidirecional</li>
+        <li>Sistema habilitado para geração</li>
+        <li>Início do abatimento na fatura (créditos)</li>
+        <li>Prazo: até 30 dias após vistoria aprovada</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Operation -->
+<div class="side-panel" id="operation">
+  <div class="panel-header">
+    <h2><i class="fa-solid fa-bolt" style="margin-right:8px;opacity:0.7"></i>Operação e Monitoramento</h2>
+    <button class="panel-close" onclick="closeAllPanels()"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="panel-body">
+    <div class="info-card">
+      <h4>Monitoramento Remoto</h4>
+      <ul>
+        <li>App do fabricante do inversor (Growatt, Solis, etc.)</li>
+        <li>Acompanhamento de geração em tempo real</li>
+        <li>Alertas de falhas e desconexões</li>
+        <li>Histórico de produção mensal e anual</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h4>Manutenção Preventiva</h4>
+      <ul>
+        <li>Limpeza dos módulos (semestral ou conforme necessidade)</li>
+        <li>Inspeção visual das conexões e estrutura</li>
+        <li>Verificação dos parâmetros do inversor</li>
+        <li>Análise do histórico de geração vs. esperado</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h4>Créditos de Energia (SCEE)</h4>
+      <ul>
+        <li>Excedente gerado vira crédito na fatura</li>
+        <li>Créditos válidos por 60 meses</li>
+        <li>Podem ser usados na mesma UC ou em outras</li>
+        <li>Residencial: tarifa ativa sem fio de distribuição</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h4>Pós-Venda e Relacionamento</h4>
+      <ul>
+        <li>Visita de acompanhamento após 30 dias</li>
+        <li>Relatório mensal de geração ao cliente</li>
+        <li>Programa de indicação de clientes</li>
+        <li>Contrato de manutenção anual</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Simulator -->
+<div class="side-panel" id="simulator">
+  <div class="panel-header">
+    <h2><i class="fa-solid fa-calculator" style="margin-right:8px;opacity:0.7"></i>Simulador Rápido</h2>
+    <button class="panel-close" onclick="closeAllPanels()"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="panel-body">
+    <div class="sim-group">
+      <label>Consumo mensal (kWh)</label>
+      <input type="number" id="consumo" placeholder="Ex: 350">
+    </div>
+    <div class="sim-group">
+      <label>Irradiação média (h/dia)</label>
+      <input type="number" id="irradiacao" value="5.0" step="0.1">
+    </div>
+    <div class="sim-group">
+      <label>Potência do módulo (W)</label>
+      <input type="number" id="potencia" value="600">
+    </div>
+    <div class="sim-group">
+      <label>Eficiência do sistema (%)</label>
+      <input type="number" id="eficiencia" value="80" min="50" max="100">
+    </div>
+    <button class="sim-btn" onclick="calcular()">⚡ CALCULAR DIMENSIONAMENTO</button>
+
+    <div class="sim-result" id="simResult">
+      <div class="result-num" id="resultModulos">0</div>
+      <div class="result-label">módulos necessários</div>
+      <div class="result-kw" id="resultKw"></div>
+      <div id="resultExtra" style="font-size:12px;color:var(--text2);margin-top:10px;line-height:1.5"></div>
+    </div>
+
+    <div class="info-card" style="margin-top:20px">
+      <h4>Fórmula utilizada</h4>
+      <ul>
+        <li>Geração/módulo = (W ÷ 1000) × irradiação × 30 × eficiência</li>
+        <li>N° módulos = consumo ÷ geração por módulo</li>
+        <li>Para dimensionamento completo, use a calculadora avançada</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>⚡ Processo Solar · Material de treinamento desenvolvido por <a href="#">Eng. Daniel Silva</a> · Todos os direitos reservados</p>
+</footer>
+
+<script>
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  // ===================== TABS =====================
+  function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('section-' + id).classList.add('active');
+    const tabs = document.querySelectorAll('.nav-tab');
+    const map = { timeline: 0, quicklinks: 1, pricing: 2 };
+    tabs[map[id]].classList.add('active');
+  }
+
+  // ===================== PANELS =====================
+  function openPanel(id) {
+    closeAllPanels();
+    document.getElementById(id).classList.add('active');
+    document.getElementById('panelOverlay').classList.add('active');
+  }
+
+  function closeAllPanels() {
+    document.querySelectorAll('.side-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('panelOverlay').classList.remove('active');
+  }
+
+  function openSimulator() {
+    openPanel('simulator');
+  }
+
+  // ===================== PDF FULLSCREEN =====================
+  let pdfDoc = null;
+  let currentPage = 1;
+  let totalPages = 0;
+  let isRendering = false;
+
+  async function openPDF(file, title) {
+    const overlay = document.getElementById('pdfOverlay');
+    const area = document.getElementById('pdfScrollArea');
+    const loading = document.getElementById('pdfLoading');
+    const titleEl = document.getElementById('pdfTitle');
+    const pageInfo = document.getElementById('pdfPageInfo');
+
+    titleEl.textContent = title || file;
+    area.innerHTML = '';
+    loading.style.display = 'block';
+    area.appendChild(loading);
+    overlay.classList.add('active');
+    currentPage = 1;
+    pdfDoc = null;
+
+    try {
+      pdfDoc = await pdfjsLib.getDocument(file).promise;
+      totalPages = pdfDoc.numPages;
+      pageInfo.textContent = `${currentPage} / ${totalPages}`;
+      loading.style.display = 'none';
+      await renderAllPages();
+    } catch (e) {
+      loading.innerHTML = `<i class="fa-solid fa-circle-exclamation" style="color:#ef4444;animation:none"></i><br>Não foi possível carregar o arquivo PDF.<br><small style="color:#64748b;margin-top:8px;display:block">${file}</small>`;
+    }
+  }
+
+  async function renderAllPages() {
+    if (!pdfDoc) return;
+    const area = document.getElementById('pdfScrollArea');
+    area.innerHTML = '';
+
+    for (let num = 1; num <= pdfDoc.numPages; num++) {
+      const page = await pdfDoc.getPage(num);
+      const viewport = page.getViewport({ scale: 1.6 });
+      const canvas = document.createElement('canvas');
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+      area.appendChild(canvas);
+      await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+    }
+  }
+
+  function prevPage() {
+    const area = document.getElementById('pdfScrollArea');
+    const canvases = area.querySelectorAll('canvas');
+    if (currentPage > 1) {
+      currentPage--;
+      canvases[currentPage - 1]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('pdfPageInfo').textContent = `${currentPage} / ${totalPages}`;
+    }
+  }
+
+  function nextPage() {
+    const area = document.getElementById('pdfScrollArea');
+    const canvases = area.querySelectorAll('canvas');
+    if (currentPage < totalPages) {
+      currentPage++;
+      canvases[currentPage - 1]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('pdfPageInfo').textContent = `${currentPage} / ${totalPages}`;
+    }
+  }
+
+  // Track scroll to update current page
+  document.getElementById('pdfScrollArea').addEventListener('scroll', function() {
+    const area = this;
+    const canvases = area.querySelectorAll('canvas');
+    if (!canvases.length) return;
+    const scrollTop = area.scrollTop;
+    let closest = 0;
+    let minDist = Infinity;
+    canvases.forEach((c, i) => {
+      const dist = Math.abs(c.offsetTop - scrollTop);
+      if (dist < minDist) { minDist = dist; closest = i; }
+    });
+    currentPage = closest + 1;
+    document.getElementById('pdfPageInfo').textContent = `${currentPage} / ${totalPages}`;
+  });
+
+  function closePDF() {
+    document.getElementById('pdfOverlay').classList.remove('active');
+    pdfDoc = null;
+  }
+
+  // ESC key
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      closePDF();
+      closeAllPanels();
+    }
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextPage();
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevPage();
+  });
+
+  // Block right-click / print shortcuts
+  document.addEventListener('contextmenu', e => e.preventDefault());
+  document.addEventListener('keydown', e => {
+    if (e.ctrlKey && ['s','p','u'].includes(e.key)) e.preventDefault();
+  });
+
+  // ===================== SIMULATOR =====================
+  function calcular() {
+    const consumo = parseFloat(document.getElementById('consumo').value);
+    const irradiacao = parseFloat(document.getElementById('irradiacao').value);
+    const potencia = parseFloat(document.getElementById('potencia').value);
+    const eficiencia = parseFloat(document.getElementById('eficiencia').value) / 100;
+
+    if (!consumo || consumo <= 0) {
+      alert('Informe o consumo mensal do cliente.');
+      return;
+    }
+
+    const geracaoPorModulo = (potencia / 1000) * irradiacao * 30 * eficiencia;
+    const modulos = Math.ceil(consumo / geracaoPorModulo);
+    const potenciaTotal = ((potencia * modulos) / 1000).toFixed(2);
+    const geracaoEstimada = (geracaoPorModulo * modulos).toFixed(0);
+
+    document.getElementById('resultModulos').textContent = modulos;
+    document.getElementById('resultKw').textContent = `${potenciaTotal} kWp instalados`;
+    document.getElementById('resultExtra').innerHTML =
+      `Geração estimada: <strong style="color:white">${geracaoEstimada} kWh/mês</strong><br>` +
+      `Geração por módulo: <strong style="color:white">${geracaoPorModulo.toFixed(1)} kWh/mês</strong>`;
+    document.getElementById('simResult').classList.add('show');
+  }
+</script>
 </body>
 </html>
